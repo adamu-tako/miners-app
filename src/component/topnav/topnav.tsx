@@ -3,7 +3,7 @@ import ProfileIcon from "../../assets/ProfileIcon.svg";
 
 const Topnav = ({ label }: { label: string }) => {
   return (
-    <div className="h-20 flex justify-between items-center px-5 w-full rounded-xl bg-white">
+    <div className="h-20 py-5 flex justify-between items-center px-5 w-full rounded-xl bg-white">
       <div className="h-[2.9rem]">
         <p className="text-black font-bold text-xl">{label}</p>
         <p className="text-darkBlue text-xs">
