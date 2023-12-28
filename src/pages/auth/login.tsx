@@ -1,4 +1,56 @@
+import { useState } from "react";
+import { signIn } from "../../api";
+import { useAppDispatch } from "../../store/hooks";
+import { toggleToastOpen } from "../../store/slices/uiState";
+import { useNavigate } from "react-router-dom";
+
+interface LoginFormI {
+  email: string;
+  password: string;
+  keepSignedIn: boolean;
+}
+
 const LoginPage = () => {
+  const [loginForm, setLoginFOrm] = useState<LoginFormI>({
+    email: "",
+    password: "",
+    keepSignedIn: true,
+  });
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleUpdateFormInput = (
+    key: "email" | "password" | "keepSignedIn",
+    value: string
+  ) => {
+    setLoginFOrm((prevInput) => {
+      const inputCopy: LoginFormI = { ...prevInput, [key]: value };
+      return inputCopy;
+    });
+  };
+
+  const login = () => {
+    signIn(loginForm)
+      .then((data) => {
+        const response = data;
+        console.log(response);
+        dispatch(
+          toggleToastOpen({ label: "Login successfull", type: "SUCCESS" })
+        );
+        localStorage.setItem("Session", JSON.stringify(data.data));
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      })
+      .catch((err) => {
+        const response = err.response;
+        console.log(response);
+        dispatch(
+          toggleToastOpen({ label: response.data.message, type: "ERROR" })
+        );
+      });
+  };
+
   return (
     <>
       <section className="bg-white h-full md:bg-primary">
@@ -13,7 +65,9 @@ const LoginPage = () => {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-black md:text-2xl">
                 Sign in to your account
               </h1>
-              <form className="space-y-4 md:space-y-6" action="#">
+              <form
+                className="space-y-4 md:space-y-6"
+                onSubmit={(e) => e.preventDefault()}>
                 <div>
                   <label
                     htmlFor="email"
@@ -22,8 +76,10 @@ const LoginPage = () => {
                   </label>
                   <input
                     type="email"
-                    name="email"
-                    id="email"
+                    value={loginForm.email}
+                    onChange={(e) =>
+                      handleUpdateFormInput("email", e.target.value)
+                    }
                     className="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                     placeholder="name@company.com"
                   />
@@ -36,8 +92,10 @@ const LoginPage = () => {
                   </label>
                   <input
                     type="password"
-                    name="password"
-                    id="password"
+                    value={loginForm.password}
+                    onChange={(e) =>
+                      handleUpdateFormInput("password", e.target.value)
+                    }
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-black sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   />
@@ -49,11 +107,17 @@ const LoginPage = () => {
                         id="remember"
                         aria-describedby="remember"
                         type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
+                        checked={loginForm.keepSignedIn}
+                        onChange={(e) =>
+                          handleUpdateFormInput("keepSignedIn", e.target.value)
+                        }
+                        className="w-4 h-4 border border-gray-300 rounded bg-primary focus:ring-3 focus:ring-primary-300"
                       />
                     </div>
                     <div className="ml-3 text-sm">
-                      <label htmlFor="remember" className="text-gray-500">
+                      <label
+                        htmlFor="remember"
+                        className="text-primary hover:text-decoration-line">
                         Remember me
                       </label>
                     </div>
@@ -65,7 +129,7 @@ const LoginPage = () => {
                   </a>
                 </div>
                 <button
-                  type="submit"
+                  onClick={login}
                   className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                   Continue
                 </button>

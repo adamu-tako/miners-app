@@ -69,7 +69,7 @@ const SidebarComponent = () => {
             className="flex md:hidden items-center justify-center h-10">
             <img src={Hamburger} alt="hamburger menu icon" />
           </div>
-          <ul className="hidden w-full md:flex flex-col py-4">
+          <ul className="hidden mt-4 w-full md:flex flex-col py-4">
             {menuItems.map((item) => (
               <li key={item.label} className="my-1">
                 <Link

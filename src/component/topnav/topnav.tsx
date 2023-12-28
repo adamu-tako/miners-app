@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import ProfileIcon from "../../assets/ProfileIcon.svg";
+import { getGreetingByTime } from "../../utils/getGreeting";
 
 const Topnav = ({ label }: { label: string }) => {
+  const user = JSON.parse(localStorage.getItem("Session") as string).rest;
+  const greeting = getGreetingByTime();
+
   return (
     <div className="h-20 py-5 flex justify-between items-center px-5 w-full rounded-xl bg-white">
       <div className="h-[2.9rem]">
         <p className="text-black font-bold text-xl">{label}</p>
-        <p className="text-darkBlue text-xs">
-          Good Evening - Sunday, 1 September 2023
-        </p>
+        <p className="text-darkBlue text-xs">{greeting}</p>
       </div>
-      <div className="flex gap-4 items-center justify-between h-[2.9rem]">
+      <div className="flex justify-end gap-4 items-center min-w-[20%] h-[2.9rem]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -27,10 +29,12 @@ const Topnav = ({ label }: { label: string }) => {
             fill="#88A1B3"
           />
         </svg>
-        <div className="flex gap-3">
+        <div className="flex w-full  gap-3">
           <img src={ProfileIcon} alt="profile icon" />
-          <div>
-            <p className="text-black font-[500] text-base">Muhammad Bashir</p>
+          <div className="min-w-[58%]">
+            <p className="text-black font-[500] text-base">
+              {user.firstName + " " + user.lastName}
+            </p>
             <Link
               className="cursor-pointer text-primary text-[0.67rem]"
               to="/settings">

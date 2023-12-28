@@ -5,79 +5,90 @@ import LocationOrange from "../../assets/LocationOrange.svg";
 import CompanyFarme from "../../assets/CompanyFrame.svg";
 import PlusButton from "../../component/buttons/plusButton";
 import SearchInput from "../../component/inputs/searchInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "./table";
 import Modal from "../../component/modals/modal";
-import PhoneInput from "../../component/inputs/phoneInput";
+import NewMinerForm from "../../component/forms/newMiner";
+import { Link } from "react-router-dom";
+import { getMiners } from "../../api";
+import { MinerDataI } from "../../types/miners";
 
 const Hompage = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [tableData, setTableData] = useState<MinerDataI[]>();
+  const user = JSON.parse(localStorage.getItem("Session") as string).rest;
+
+  useEffect(() => {
+    const fetchMinerInfo = async () => {
+      try {
+        const data = await getMiners(searchTerm, 1, 5);
+        setTableData(data.data);
+      } catch (err) {
+        console.error("Error fetching miner info:", err);
+        // Handle the error, set an error state, or display an error message
+      }
+    };
+    fetchMinerInfo();
+  }, [searchTerm]);
 
   return (
     <>
       <div className="flex flex-col overflow-hidden h-full p-0 rounded-xl">
-        <Topnav label="Hi, Muhammad" />
         <div>
-          <div className="mb-3">
-            <div
-              onClick={() => setShowModal(!showModal)}
-              className="flex gap-4 my-3">
+          <Topnav label={`Hi, ${user.firstName}`} />
+          <div>
+            <div className="mb-3">
+              <div className="flex gap-4 my-3">
+                <DashboardCard
+                  image={LocationBlue}
+                  title="800"
+                  subTitle="Miners in 24 states"
+                />
+                <DashboardCard
+                  image={LocationOrange}
+                  title="800"
+                  subTitle="Miners in 24 LGAs"
+                />
+              </div>
               <DashboardCard
-                image={LocationBlue}
-                title="800"
-                subTitle="Miners in 24 states"
-              />
-              <DashboardCard
-                image={LocationOrange}
+                image={CompanyFarme}
                 title="800"
                 subTitle="Miners in 24 LGAs"
+                width="w-full"
               />
             </div>
-            <DashboardCard
-              image={CompanyFarme}
-              title="800"
-              subTitle="Miners in 24 LGAs"
-              width="w-full"
+          </div>
+        </div>
+        <div className={`bg-white rounded-xl p-4 h-full`}>
+          <div className="text-[1.0625rem] flex justify-between">
+            <h1 className="font-semibold text-black">List of Miners (400)</h1>
+            <Link to="miners">
+              <p className="text-primary font-medium hover:text-decoration-line">
+                See all
+              </p>
+            </Link>
+          </div>
+          <div className="my-4 flex justify-between">
+            <SearchInput
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <PlusButton
+              handleClick={() => setShowModal(!showModal)}
+              label="Add New Miner"
             />
           </div>
-          <div className="bg-white h-full rounded-xl p-4">
-            <div className="text-[1.0625rem] flex justify-between">
-              <h1 className="font-semibold text-black">List of Miners (400)</h1>
-              <p className="text-primary font-medium">See all</p>
-            </div>
-            <div className="my-4 flex justify-between">
-              <SearchInput
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <PlusButton
-                label="Add New Miner"
-                handleClick={() => console.log("Wahala be li9ke adding miner")}
-              />
-            </div>
-            <div className="h-full max-h-[18rem] overflow-auto">
-              <Table />
-            </div>
+          <div className="h-[75%]">
+            <Table tableData={tableData as MinerDataI[]} />
           </div>
         </div>
       </div>
       {showModal && (
         <>
-          <Modal header="Testing Modal" onClose={() => setShowModal(false)}>
-            <div className="border-2 border-red-500">
-              <div>dskjvfcv</div>
-              <div>dskjvfcv</div>
-              <div>dskjvfcv</div>
-            </div>
+          <Modal header="New Miner" onClose={() => setShowModal(false)}>
             <div>
-              <PhoneInput
-                label="dskfjs"
-                value="fdsaf"
-                onChange={() => console.log("first")}
-                placeholder="dsfkjsd"
-                required
-              />
+              <NewMinerForm />
             </div>
           </Modal>
         </>

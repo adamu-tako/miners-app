@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler, ReactNode } from "react";
-import Cancel from "../../assets/Cancel.svg";
+import Cancel from "../../assets/CancelBlack.svg";
 
 interface ModalProps {
   children: ReactNode;
@@ -11,12 +11,12 @@ const Modal: FC<ModalProps> = (props) => {
   return (
     <>
       {/* <!-- Main modal --> */}
-      <div className="flex bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div className="relative p-4 w-full max-w-md max-h-full">
+      <div className="flex bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full">
+        <div className="relative pb-2 overflow-hidden w-full md:max-w-md max-h-full">
           {/* <!-- Modal content --> */}
-          <div className="relative bg-white rounded-lg shadow">
+          <div className="relative bg-white h-[98vh] rounded-lg">
             {/* <!-- Modal header --> */}
-            <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
+            <div className="flex items-center justify-between px-4 md:px-5 pt-4 md:pt-5 rounded-t">
               <h3 className="text-lg font-semibold text-black ">
                 {props.header}
               </h3>
@@ -30,7 +30,7 @@ const Modal: FC<ModalProps> = (props) => {
               </button>
             </div>
             {/* <!-- Modal body --> */}
-            <div className="p-4 md:p-5">{props.children}</div>
+            <div className="px-4 md:px-5 max-h-[90vh]">{props.children}</div>
           </div>
         </div>
       </div>

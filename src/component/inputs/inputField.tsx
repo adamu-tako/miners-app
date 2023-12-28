@@ -11,7 +11,7 @@ interface InputProps {
 
 const InputField: FC<InputProps> = (props) => {
   return (
-    <div className="col-span-2">
+    <div className="col-span-2 my-4">
       {props.label && (
         <label className="block mb-2 text-sm font-medium text-black">
           {props.label}
@@ -22,7 +22,7 @@ const InputField: FC<InputProps> = (props) => {
         name={props.label}
         value={props.value}
         onChange={props.onChange}
-        className="bg-secondaryGrey focus:outline-1 focus:outline-primary text-mainGray text-sm rounded-lg block w-full p-2.5"
+        className="bg-secondaryGrey text-black focus:outline-1 focus:outline-primary text-sm rounded-lg block w-full p-2.5"
         placeholder={props.placeholder}
         required={props.required}
       />

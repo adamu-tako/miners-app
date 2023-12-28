@@ -1,12 +1,18 @@
+import { FC } from "react";
 import MoreSquare from "../../assets/MoreSquare.svg";
 import TempProfile from "../../assets/TempProfile.svg";
+import { MinerDataI } from "../../types/miners";
 
-const Table = () => {
+interface TableProps {
+  tableData: MinerDataI[];
+}
+
+const Table: FC<TableProps> = (props) => {
   return (
     <>
-      <div className="relative">
-        <table className="w-full  text-sm  text-left rtl:text-right text-gray-500">
-          <thead className="text-xs text-mainGray">
+      <div className="relative h-[99%] overflow-y-auto">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs w-full text-mainGray">
             <tr className="h-8">
               <th scope="col" className="px-4">
                 <div className="flex items-center">
@@ -39,10 +45,10 @@ const Table = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {[1, 23, 4, 5, 67, 8, 9, 53, 78, 89, 675, 34, 654].map((ke) => (
+          <tbody className="pb-20">
+            {props.tableData?.map((data, i) => (
               <tr
-                key={ke}
+                key={i}
                 className="hover:bg-gray-50 text-sm text-black border-b border-[#E3F3FF]">
                 <td className="w-4 px-4 py-0">
                   <div className="flex items-center">
@@ -55,15 +61,15 @@ const Table = () => {
                 </td>
                 <th className="px-6 flex items-center font-normal gap-2 py-2">
                   <img className="h-7 w-7" src={TempProfile} alt="" />
-                  <p>Muhanned Junior {ke}</p>
+                  <p>{data.fullName}</p>
                 </th>
-                <td className="px-6 py-2">+234 8067500988</td>
-                <td className="px-6 py-2">Niger State</td>
-                <td className="px-6 py-2">Mokwa</td>
-                <td className="px-6 py-2">Tatabu</td>
-                <td className="px-6 py-2">Twelve (12) Years</td>
+                <td className="px-6 py-2">+234 {data.phoneNumber}</td>
+                <td className="px-6 py-2">{data.state}</td>
+                <td className="px-6 py-2">{data.lga}</td>
+                <td className="px-6 py-2">{data.ward}</td>
+                <td className="px-6 py-2">{data.experience}</td>
                 <td className="px-6 py-2">
-                  <div role="button">
+                  <div title="action-button" role="button">
                     <img src={MoreSquare} alt="" />
                   </div>
                 </td>
